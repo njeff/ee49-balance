@@ -66,8 +66,8 @@ class Balance:
         
         if self.balancing:
             # balancing, do drive the motors
-            lcps = self.pidL.pi_control(speedSetPoint*50, self.dt, 0.045, 0.5)
-            rcps = self.pidR.pi_control(speedSetPoint*50, self.dt, 0.045, 0.5)
+            lcps = self.pidL.pi_control(speedSetPoint*50, self.dt*1000, 0.045, 0.5)
+            rcps = self.pidR.pi_control(speedSetPoint*50, self.dt*1000, 0.045, 0.5)
         else:
             # not balancing; clear out position counts and integrator
             # clear_count is the new method for final lab
@@ -76,7 +76,7 @@ class Balance:
             self.integ = 0
 
             # stop motors
-            lcps = self.pidL.pi_control(0, self.dt, 0.04, 0.5)
-            rcps = self.pidR.pi_control(0, self.dt, 0.04, 0.5)
+            lcps = self.pidL.pi_control(0, self.dt*1000, 0.04, 0.5)
+            rcps = self.pidR.pi_control(0, self.dt*1000, 0.04, 0.5)
 
         gc.collect()
