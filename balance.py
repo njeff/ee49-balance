@@ -13,6 +13,9 @@ class Balance:
         self.kp = 219
         self.ki = 45
 
+        self.mkp = 0.045
+        self.mki = 0.5
+
         # the actual setpoint (takes into account position feedback)
         self.setPoint  = 0.07
         # the upward angle if at starting position (no position feedback)
@@ -26,6 +29,10 @@ class Balance:
     def set_balance_pi(self, p, i):
         self.kp = p
         self.ki = i
+
+    def set_motor_pi(self, p, i):
+        self.mkp = p
+        self.mki = i
     
     # for keeping track of how long it has been balancing
     def increment_count(self):
@@ -66,8 +73,8 @@ class Balance:
         
         if self.balancing:
             # balancing, do drive the motors
-            lcps = self.pidL.pi_control(speedSetPoint*50, self.dt*1000, 0.045, 0.5)
-            rcps = self.pidR.pi_control(speedSetPoint*50, self.dt*1000, 0.045, 0.5)
+            lcps = self.pidL.pi_control(speedSetPoint*50, self.dt*1000, self.mkp, self.mki)
+            rcps = self.pidR.pi_control(speedSetPoint*50, self.dt*1000, self.mkp, self.mki)
         else:
             # not balancing; clear out position counts and integrator
             # clear_count is the new method for final lab
@@ -76,7 +83,7 @@ class Balance:
             self.integ = 0
 
             # stop motors
-            lcps = self.pidL.pi_control(0, self.dt*1000, 0.04, 0.5)
-            rcps = self.pidR.pi_control(0, self.dt*1000, 0.04, 0.5)
+            lcps = self.pidL.pi_control(0, self.dt*1000, self.mkp, self.mki)
+            rcps = self.pidR.pi_control(0, self.dt*1000, self.mkp, self.mki)
 
         gc.collect()

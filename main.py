@@ -2,6 +2,7 @@ from machine import Pin, I2C, Timer
 from board import *
 from bno055 import BNO055 # IMU
 
+# You may need to rename these to fit your classes/file names!!
 from drv8833 import DRV8833 # your implementation
 from motor import PIDMotor # your implementation
 from encoder import Encoder # your implementation, don't forget clear_count
@@ -19,8 +20,15 @@ rightEnc = Encoder(36, 4, 1)
 rightM = DRV8833(17, 21)
 ########## Check Pin Numbers! ##########
 
+###### Choose your best PI values from the previous lab #####
+mp = 0.045
+mi = 0.5
+###### Choose your best PI values from the previous lab #####
+
+###### You may need to rename these based on what your class is called ! ######
 pidL = PIDMotor(leftM, leftEnc)
 pidR = PIDMotor(rightM, rightEnc)
+###### You may need to rename these based on what your class is called ! ######
 
 # setup IMU
 i2c = I2C(0, sda=23, scl=22, freq=13000)
@@ -58,6 +66,7 @@ gc.disable()
 
 balancer = Balance(pidL, pidR, imu, dt)
 balancer.set_balance_pi(219, 45)
+balancer.set_motor_pi(mp, mi)
 
 # use an infinite loop with flag so that the callback is short
 # in case code inside takes too long
